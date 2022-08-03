@@ -16,7 +16,7 @@ class HomeView(View):
 
 class ReviewView(APIView):
     def get(self,request,*args,**kwargs):
-        return Response(reviews.Review().get_all_reviews())
+        return Response(reviews.Review().get_reviews_from_date(request))
 ####################################################
 
 ## if you don't want to user rest_framework

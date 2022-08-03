@@ -1,169 +1,385 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>App Review Dashboard</title>
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-<head>
-  <meta charset="utf-8">
-  <title>chatsjs</title>
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- Latest compiled JavaScript -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+      crossorigin="anonymous"
+    ></script>
 
-  <!-- jQuery library -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+      body {
+        font-family: Arial;
+      }
 
-  <!-- Latest compiled JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      * {
+        box-sizing: border-box;
+      }
 
+      div.example input[type="text"] {
+        padding: 10px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+      }
 
+      div.example button {
+        float: left;
+        width: 20%;
+        padding: 10px;
+        background: #2196f3;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none;
+        cursor: pointer;
+      }
 
-</head>
+      div.example button:hover {
+        background: #0b7dda;
+      }
 
-<body class="container-fluid">
-  <center class="row">
-    <h1>implementation of <b>chartJS</b> using <b>django</b></h1>
-  </center>
-  <hr />
-  <div class="row">
-    <div class="col-md-6">
-      <canvas id="myChartline"></canvas>
+      div.example::after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+    </style>
+  </head>
+
+  <body class="container-fluid">
+    <h1 class="text-center"><b>App Review Analysis Dashboard</b></h1>
+    <hr />
+
+    <div class="example" style="margin: auto; max-width: 500px">
+      <input
+        id="search-word"
+        type="text"
+        placeholder="Google App ID.. ex: com.brave.browser_beta"
+      />
+      <button id="search-button" type="submit">
+        <i class="fa fa-search"></i>
+      </button>
     </div>
-    <div class="col-md-6">
-      <canvas id="myChartBar"></canvas>
+
+    <button id="loadingDiv" class="btn btn-primary" type="button" disabled>
+      <span
+        class="spinner-border spinner-border-sm"
+        role="status"
+        aria-hidden="true"
+      ></span>
+      Loading...
+    </button>
+
+    <div class="row">
+      <div class="col-md-6">
+        <canvas id="myChartPie"></canvas>
+      </div>
+      <div class="col-md-6">
+        <canvas id="myChartBar"> </canvas>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <canvas id="myChartPie"></canvas>
+    <br />
+    <div class="row">
+      <div class="col-md-6">
+        <canvas id="myCommonTreeMap"></canvas>
+      </div>
+      <div class="col-md-6">
+        <canvas id="myPosTreeMap"></canvas>
+      </div>
     </div>
-  </div>
+    <br />
+    <div class="row">
+      <div class="col-md-6">
+        <canvas id="myNegTreeMap"></canvas>
+      </div>
+      <div class="col-md-6">
+        <canvas id="myNeuTreeMap"></canvas>
+      </div>
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@0.2.3"></script>
 
-  <script>
-    var endpoint = '/reviews';
-   (function pollData() {
-    $.ajax({
-      method: "GET",
-      url: endpoint,
-      success: function(data) {
-        drawPieGraph(data,'myChartPie');
-        console.log("drawing");
-      },
-      error: function(error_data) {
-        console.log(error_data);
-      },
-      complete:setTimeout(function() {pollData()}, 60*60*1000),
-        })
-  })();
+    <script>
+      var myBarChart;
+      var myPieChart;
+      var myTreeAll;
+      var myTreePos;
+      var myTreeNeg;
+      var myTreeNeu;
+      var chart;
 
+      $("#loadingDiv").hide();
+      $("#search-button").click(pollData);
+      $("#search-button").click(function () {
+        var value = $("#search-word").val();
+        $("#loadingDiv").show();
+        $("#loadingDiv").text(
+          "Setting Up View For " + value + " it takes few min..."
+        );
+      });
 
-    function drawPieGraph(data,id){
-      var labels = data.labels;
-      var chartLabel = data.chartLabel;
-      var chartdata = data.percentage;
-      var ctx = document.getElementById(id).getContext('2d');
-      var chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'doughnut',
+      function pollData(e) {
+        var value = $("#search-word").val();
+        var endpoint = "/reviews?" + "q=" + value;
+        $.ajax({
+          method: "GET",
+          url: endpoint,
+          success: function (data) {
+            drawPieGraph(data.overall, "myChartPie");
+            drawBarGraph(data.last7Days, "myChartBar");
+            drawTreeMap(data.common_words.all, "myCommonTreeMap", "all");
+            drawTreeMap(data.common_words.pos, "myPosTreeMap", "pos");
+            drawTreeMap(data.common_words.neg, "myNegTreeMap", "neg");
+            drawTreeMap(data.common_words.neu, "myNeuTreeMap", "neu");
 
-        // The data for our dataset
-        data: {
-          labels: labels,
-          datasets: [{
-            label: chartLabel,
-            data: chartdata,
-            backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
-            ],  
-            borderColor: 'rgb(55, 99, 132)',
-            hoverOffset: 4
-          }]
+            $("#loadingDiv").hide();
+            setTimeout(function () {
+              pollData();
+            }, 5 * 60 * 1000);
+          },
+          error: function (error_data) {
+            $("#loadingDiv").text("Error Loading");
+            console.log(error_data);
+          },
+        });
+      }
+
+      function colorFromValue(value, border) {
+        var alpha = (1 + Math.log(value)) / 5;
+        var color = "red";
+        if (border) {
+          alpha += 0.01;
+        }
+        return Chart.helpers.color(color).alpha(alpha).rgbString();
+      }
+
+      
+
+      function drawPieGraph(data, id) {
+        var labels = data.labels;
+        var chartLabel = "sentiment";
+        var chartdata = data.percentage;
+        var canvas = document.getElementById(id);
+        var ctx = canvas.getContext("2d");
+
+        if (myPieChart != undefined) {
+          myPieChart.data.labels = labels;
+          myPieChart.data.datasets[0].data = chartdata;
+          myPieChart.update();
+          return;
         }
 
-      });
-    }
+        myPieChart = new Chart(ctx, {
+          // The type of chart we want to create
+          type: "doughnut",
 
-    function drawLineGraph(data, id) {
-      var labels = data.labels;
-      var chartLabel = data.chartLabel;
-      var chartdata = data.chartdata;
-      var ctx = document.getElementById(id).getContext('2d');
-      var chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'line',
-
-        // The data for our dataset
-        data: {
-          labels: labels,
-          datasets: [{
-            label: chartLabel,
-            backgroundColor: 'rgb(255, 100, 200)',
-            borderColor: 'rgb(55, 99, 132)',
-            data: chartdata,
-          }]
-        },
-
-        // Configuration options go here
-        options: {
-          scales: {
-            xAxes: [{
-              display: true
-            }],
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
-
-      });
-    }
-
-    function drawBarGraph(data, id) {
-      var labels = data.labels;
-      var chartLabel = data.chartLabel;
-      var chartdata = data.chartdata;
-      var ctx = document.getElementById(id).getContext('2d');
-      var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: chartLabel,
-            data: chartdata,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)'
+          // The data for our dataset
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: chartLabel,
+                data: chartdata,
+                backgroundColor: [
+                  "rgb(124,252,0)",
+                  "rgb(255, 99, 132)",
+                  "rgb(255, 205, 86)",
+                ],
+                borderColor: "rgb(55, 99, 132)",
+                hoverOffset: 4,
+              },
             ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              }
-            }]
-          }
-        }
-      });
-    }
-  </script>
-</body>
+          },
+          options: {
+            title: {
+              display: true,
+              text: "Last 30 Days Sentiment of the App",
+            },
+          },
+          plugins: [
+            {
+              beforeInit: function (chart, options) {},
+            },
+          ],
+        });
+      }
 
+      function drawTreeMap(data, id, type) {
+        var bg_color;
+        var title;
+        if (type == "all") {
+          bg_color = "purple";
+          title = "Most Used words";
+          if (myTreeAll != undefined) {
+            myTreeAll.data.datasets[0].tree = data;
+            myTreeAll.update();
+            return;
+          }
+          myTreeAll = drawTreeGen(id, data, bg_color, title);
+        } else if (type == "pos") {
+          bg_color = "green";
+          title = "Top Positive words";
+          if (myTreePos != undefined) {
+            myTreePos.data.datasets[0].tree = data;
+            myTreePos.update();
+            return;
+          }
+          myTreePos = drawTreeGen(id, data, bg_color, title);
+        } else if (type == "neg") {
+          bg_color = "red";
+          title = "Top Negative words";
+          if (myTreeNeg != undefined) {
+            myTreeNeg.data.datasets[0].tree = data;
+            myTreeNeg.update();
+          }
+          myTreeNeg = drawTreeGen(id, data, bg_color, title);
+        } else if (type == "neu") {
+          bg_color = "yellow";
+          title = "Top Neutral words";
+          if (myTreeNeu != undefined) {
+            myTreeNeu.data.datasets[0].tree = data;
+            myTreeNeu.update();
+          }
+          myTreeNeu = drawTreeGen(id, data, bg_color, title);
+        }
+      }
+
+      function drawTreeGen(id, data, bg_color, title) {
+        var canvas = document.getElementById(id);
+        var ctx = canvas.getContext("2d");
+        return new Chart(ctx, {
+          type: "treemap",
+          data: {
+            datasets: [
+              {
+                label: "Sample with labels",
+                tree: data,
+                key: "count",
+                groups: ["common_word"],
+                fontColor: "black",
+                fontFamily: "Optima",
+                fontSize: 10,
+                backgroundColor: bg_color,
+                borderColor: function (ctx) {
+                  return colorFromValue(ctx.dataset.data[ctx.dataIndex], true);
+                },
+                spacing: 0.1,
+                borderWidth: 2,
+                borderColor: "rgba(180,180,180, 0.15)",
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: title,
+            },
+            legend: {
+              display: false,
+            },
+            tooltips: {
+              callbacks: {
+                title: function (item, data) {
+                  return data.datasets[item[0].datasetIndex].key;
+                },
+                label: function (item, data) {
+                  var dataset = data.datasets[item.datasetIndex];
+                  var dataItem = dataset.data[item.index];
+                  var obj = dataItem._data;
+                  var label = obj.common_word;
+                  return label + ": " + dataItem.v;
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function drawBarGraph(data, id) {
+        var labels = data.labels;
+        var chartLabel = data.chartLabel;
+        var chartdata = data.chartdata;
+        var canvas = document.getElementById(id);
+        var ctx = canvas.getContext("2d");
+
+        if (myBarChart != undefined) {
+          myBarChart.data.labels = labels;
+          myBarChart.data.datasets[0].data = chartdata.positive;
+          myBarChart.data.datasets[1].data = chartdata.negative;
+          myBarChart.data.datasets[2].data = chartdata.neutral;
+          myBarChart.update();
+          return;
+        }
+
+        myBarChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Positive",
+                data: chartdata.positive,
+                backgroundColor: "rgb(124,252,0)",
+              },
+              {
+                label: "Negative",
+                data: chartdata.negative,
+                backgroundColor: "rgb(255, 99, 132)",
+              },
+              {
+                label: "Neutral",
+                data: chartdata.neutral,
+                backgroundColor: "rgb(255, 205, 86)",
+              },
+            ],
+          },
+          options: {
+            title: {
+              display: true,
+              text: "Last 7 Days Rating Trend",
+            },
+            scales: {
+              xAxes: [
+                {
+                  stacked: true,
+                },
+              ],
+              yAxes: [
+                {
+                  stacked: true,
+                },
+              ],
+            },
+          },
+          plugins: [
+            {
+              beforeInit: function (chart, options) {},
+            },
+          ],
+        });
+      }
+    </script>
+  </body>
 </html>

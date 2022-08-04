@@ -258,10 +258,12 @@ class Review:
     def get_reviews_from_date(self, request):
 
         app_name = request.GET.get('q')
+        days=request.GET.get('days')
+
 
         today = DT.datetime.utcnow().date()
         dt = DT.datetime.combine(today, DT.datetime.min.time())
-        from_date = dt - DT.timedelta(days=30)
+        from_date = dt - DT.timedelta(days=int(days))
 
         continuation_token = None
         complete_data = list()

@@ -1,149 +1,192 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8" />
-    <title>App Review Dashboard</title>
-    <!-- Latest compiled and minified CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
-      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
 
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-      integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-      crossorigin="anonymous"
-    ></script>
-    <!-- Latest compiled JavaScript -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"
-      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-      crossorigin="anonymous"
-    ></script>
+<head>
+  <meta charset="utf-8" />
+  <title>App Review Dashboard</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 
-    <style>
-      body {
-        font-family: Arial;
-      }
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+    integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+    crossorigin="anonymous"></script>
+  <!-- Latest compiled JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
 
-      * {
-        box-sizing: border-box;
-      }
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #F6F8FA;
+    }
 
-      div.example input[type="text"] {
-        padding: 10px;
-        font-size: 17px;
-        border: 1px solid grey;
-        float: left;
-        width: 80%;
-        background: #f1f1f1;
-      }
+    * {
+      box-sizing: border-box;
+    }
 
-      div.example button {
-        float: left;
-        width: 20%;
-        padding: 10px;
-        background: #2196f3;
-        color: white;
-        font-size: 17px;
-        border: 1px solid grey;
-        border-left: none;
-        cursor: pointer;
-      }
+    div.example input[type="text"] {
+      padding: 10px;
+      font-size: 17px;
+      border: 1px solid grey;
+      float: left;
+      width: 80%;
+      background: #f1f1f1;
+      border-radius: 0.25rem;
+    }
 
-      div.example button:hover {
-        background: #0b7dda;
-      }
+    div.example button {
+      float: left;
+      width: 20%;
+      padding: 10px;
+      background: #2196f3;
+      color: white;
+      font-size: 17px;
+      border: 1px solid grey;
+      border-left: none;
+      cursor: pointer;
+      border-radius: 0.25rem;
+    }
 
-      div.example::after {
-        content: "";
-        clear: both;
-        display: table;
-      }
+    div.example button:hover {
+      background: #0b7dda;
+    }
 
-      .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-      }
+    div.example::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
 
-      .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      padding-top: 5px;
+    }
 
-      .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: 0.4s;
-        transition: 0.4s;
-      }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
 
-      .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: 0.4s;
-        transition: 0.4s;
-      }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+    }
 
-      input:checked + .slider {
-        background-color: #2196f3;
-      }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+    }
 
-      input:focus + .slider {
-        box-shadow: 0 0 1px #2196f3;
-      }
+    input:checked+.slider {
+      background-color: #2196f3;
+    }
 
-      input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
-      }
+    input:focus+.slider {
+      box-shadow: 0 0 1px #2196f3;
+    }
 
-      /* Rounded sliders */
-      .slider.round {
-        border-radius: 34px;
-      }
+    input:checked+.slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
 
-      .slider.round:before {
-        border-radius: 50%;
-      }
-    </style>
-  </head>
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
 
-  <body class="container-fluid">
-    <h1 class="text-center"><b>App Review Analysis Dashboard</b></h1>
-    <hr />
+    .slider.round:before {
+      border-radius: 50%;
+    }
 
-    <div class="row">
-      <div class="dropdown col-2 select-div">
-        <button
-          type="button"
-          class="btn btn-primary dropdown-toggle"
-          data-toggle="dropdown"
-          id="select-button-app"
-        >Brave</button>
-        <div class="dropdown-menu menu-app">
+    #select-button-days {
+      float: left;
+      width: 80%;
+      padding: 10px;
+      background: #2196f3;
+      color: white;
+      font-size: 17px;
+      border: 1px solid grey;
+      border-left: none;
+      cursor: pointer;
+      border-radius: 0.25rem;
+    }
+
+    #select-button-days:hover {
+      background: #0b7dda;
+    }
+
+    #select-button-app {
+      float: left;
+      width: 80%;
+      padding: 10px;
+      background: #2196f3;
+      color: white;
+      font-size: 17px;
+      border: 1px solid grey;
+      border-left: none;
+      cursor: pointer;
+      border-radius: 0.25rem;
+    }
+
+    #select-button-app:hover {
+      background: #0b7dda;
+    }
+    .row {
+      margin-top: 10px;
+    }
+
+  </style>
+</head>
+
+<body class="container-fluid">
+  <h1 class="text-center"><b>App Review Analysis Dashboard</b></h1>
+  <div class="row">
+    <div class="dropdown col-2">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false" data-toggle="dropdown" id="select-button-days">Last 7 Days
+      </button>
+      <div class="dropdown-menu menu-days">
+        <a class="dropdown-item" href="#">Last 7 Days</a>
+        <a class="dropdown-item" href="#">Last 1 Month</a>
+        <a class="dropdown-item" href="#">Last 2 Months</a>
+        <a class="dropdown-item" href="#">Last 3 Months</a>
+        <a class="dropdown-item" href="#">Last 4 Months</a>
+        <a class="dropdown-item" href="#">Last 5 Months</a>
+        <a class="dropdown-item" href="#">Last 6 Months</a>
+      </div>
+    </div>
+
+
+    <div class="example col-4 search-div" style="margin: auto; max-width: 500px">
+      <div class="dropdown select-div">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false" data-toggle="dropdown" id="select-button-app">Brave</button>
+        <div class="dropdown-menu dropdown-menu-end menu-app">
           <a class="dropdown-item" href="#">Upstox</a>
           <a class="dropdown-item" href="#">Upstox</a>
           <a class="dropdown-item" href="#">Upstox</a>
@@ -153,422 +196,441 @@
           <a class="dropdown-item" href="#">Upstox</a>
         </div>
       </div>
-
-      <div
-        class="example col-4 search-div"
-        style="margin: auto; max-width: 500px"
-      >
-        <input
-          id="search-word"
-          type="text"
-          placeholder="Google App ID.. ex: com.brave.browser_beta"
-        />
-        <button id="search-button" type="submit">
-          <i class="fa fa-search"></i>
-        </button>
-      </div>
-      <div class="col-sm-2">
-        <label>Search</label>
-        <label class="switch">
-          <input type="checkbox" id="search-toggle" />
-          <span class="slider round" data-on="ON" data-off="OFF"></span>
-        </label>
-      </div>
-      <div class="dropdown col-2">
-        <button
-          type="button"
-          class="btn btn-primary dropdown-toggle"
-          data-toggle="dropdown"
-          id="select-button-days"
-        >
-          Last 7 Days
-        </button>
-        <div class="dropdown-menu menu-days">
-          <a class="dropdown-item" href="#">Last 7 Days</a>
-          <a class="dropdown-item" href="#">Last 1 Month</a>
-          <a class="dropdown-item" href="#">Last 2 Months</a>
-          <a class="dropdown-item" href="#">Last 3 Months</a>
-          <a class="dropdown-item" href="#">Last 4 Months</a>
-          <a class="dropdown-item" href="#">Last 5 Months</a>
-          <a class="dropdown-item" href="#">Last 6 Months</a>
-        </div>
-      </div>
-
-      <div class="col-4">
-        <button id="loadingDiv" class="btn btn-primary" type="button" disabled>
-          <span
-            class="spinner-border spinner-border-sm"
-            role="status"
-            aria-hidden="true"
-          ></span>
-          Loading...
-        </button>
-      </div>
+      <input id="search-word" type="text" placeholder="Google App ID.. ex: com.brave.browser_beta" />
+      <button id="search-button" type="submit">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+    <div class="col-sm-2">
+      <label style="padding: 10px;">Select</label>
+      <label class="switch">
+        <input type="checkbox" id="search-toggle" />
+        <span class="slider round" data-on="ON" data-off="OFF"></span>
+      </label>
+      <label style="padding: 10px;">Search</label>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <canvas id="myChartPie"></canvas>
-      </div>
-      <div class="col-md-6">
-        <canvas id="myChartBar"> </canvas>
-      </div>
-    </div>
-    <br />
-    <div class="row">
-      <div class="col-md-6">
-        <canvas id="myCommonTreeMap"></canvas>
-      </div>
-      <div class="col-md-6">
-        <canvas id="myPosTreeMap"></canvas>
-      </div>
-    </div>
-    <br />
-    <div class="row">
-      <div class="col-md-6">
-        <canvas id="myNegTreeMap"></canvas>
-      </div>
-      <div class="col-md-6">
-        <canvas id="myNeuTreeMap"></canvas>
-      </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@0.2.3"></script>
+    <div class="col-4">
+      <button id="loadingDiv" class="btn btn-primary" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+      </button>
+    </div>
+  </div>
 
-    <script>
-      var myBarChart;
-      var myPieChart;
-      var myTreeAll;
-      var myTreePos;
-      var myTreeNeg;
-      var myTreeNeu;
-      var chart;
-      var timeouts = [];
-      var searchToggle;
-      var app_name;
-      var period;
-      var app_ids={"Brave":"com.brave.browser_beta","Upstox":"in.upstox.pro"};
-      function clearAllTimeout() {
-        for (var i = 0, z = timeouts.length; i < z; i++)
-          clearTimeout(timeouts[i]);
+  <div class="row">
+    <div class="col-md-6">
+      <canvas id="myChartPie"></canvas>
+    </div>
+    <div class="col-md-6">
+      <canvas id="myChartBar"> </canvas>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-md-6">
+      <canvas id="myCommonTreeMap"></canvas>
+    </div>
+    <div class="col-md-6">
+      <canvas id="myPosTreeMap"></canvas>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col-md-6">
+      <canvas id="myNegTreeMap"></canvas>
+    </div>
+    <div class="col-md-6">
+      <canvas id="myNeuTreeMap"></canvas>
+    </div>
+  </div>
 
-        timeouts = [];
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@0.2.3"></script>
+
+  <script>
+    var myBarChart;
+    var myPieChart;
+    var myTreeAll;
+    var myTreePos;
+    var myTreeNeg;
+    var myTreeNeu;
+    var chart;
+    var timeouts = [];
+    var searchToggle;
+    var app_name;
+    var period;
+    var app_ids = { "Brave": "com.brave.browser_beta", "Upstox": "in.upstox.pro" };
+    function clearAllTimeout()
+    {
+      for (var i = 0, z = timeouts.length; i < z; i++)
+        clearTimeout(timeouts[i]);
+
+      timeouts = [];
+    }
+
+    $("#search-word").hide();
+    /*Search/Select Toogle*/
+    $("#search-toggle").change(function ()
+    {
+      searchToggle = this.checked;
+      if (this.checked)
+      {
+        $("#search-word").show();
+        $(".select-div").hide();
+      } else
+      {
+        $("#search-word").hide();
+        $(".select-div").show();
       }
+    });
 
-      $("#search-word").hide();
-      /*Search/Select Toogle*/
-      $("#search-toggle").change(function () {
-        searchToggle = this.checked;
-        if (this.checked) {
-          $("#search-word").show();
-          $(".select-div").hide();
-        } else {
-          $("#search-word").hide();
-          $(".select-div").show();
-        }
-      });
+    $("#loadingDiv").hide();
+    $("#search-button").click();
 
-      $("#loadingDiv").hide();
-      $("#search-button").click();
-
-      $("#search-button").click(function () {
-        clearAllTimeout();
-        if (searchToggle) {
+    $("#search-button").click(function ()
+    {
+      clearAllTimeout();
+      if (searchToggle)
+      {
         app_name = $("#search-word").val();
-        } else {
-          app_name = $("#select-button-app").text();
-          console.log(app_name)
-          console.log(app_ids)
-          app_name=app_ids[app_name];
+      } else
+      {
+        app_name = $("#select-button-app").text();
+        console.log(app_name)
+        console.log(app_ids)
+        app_name = app_ids[app_name];
 
-        }
-        period = $("#select-button-days").text();
-        $("#loadingDiv").show();
-        $("#loadingDiv").text(
-          "Setting Up View For " + app_name + " it takes few min..."
-        );
-        pollData(app_name, period);
-      });
+      }
+      period = $("#select-button-days").text();
+      $("#loadingDiv").show();
+      $("#loadingDiv").text(
+        "Setting Up View For " + app_name + " it takes few min..."
+      );
+      pollData(app_name, period);
+    });
 
-      //Select Period
-      $(".menu-days a").click(function () {
-        $("#select-button-days").text($(this).text());
-      });
+    //Select Period
+    $(".menu-days a").click(function ()
+    {
+      $("#select-button-days").text($(this).text());
+    });
 
-      //Select App
+    //Select App
 
-      $(".menu-app a").click(function () {
-        $("#select-button-app").text($(this).text());
-      });
-      function pollData(app_name, period) {
-        var days = period.split(" ")[1];
-        switch (days) {
-          case "1":
-            days = 30;
-            break;
-          case "2":
-            days = 30 * 2;
-            break;
-          case "3":
-            days = 30 * 3;
-            break;
-          case "4":
-            days = 30 * 4;
-            break;
-          case "5":
-            days = 30 * 5;
-            break;
-          case "6":
-            days = 30 * 60;
-            break;
-          default:
-            days = 7;
-        }
-
-        var endpoint = "/reviews?" + "q=" + app_name + "&days=" + days;
-
-        $.ajax({
-          method: "GET",
-          url: endpoint,
-          success: function (data) {
-            drawPieGraph(data.overall, "myChartPie");
-            drawBarGraph(data.last7Days, "myChartBar");
-            drawTreeMap(data.common_words.all, "myCommonTreeMap", "all");
-            drawTreeMap(data.common_words.pos, "myPosTreeMap", "pos");
-            drawTreeMap(data.common_words.neg, "myNegTreeMap", "neg");
-            drawTreeMap(data.common_words.neu, "myNeuTreeMap", "neu");
-
-            $("#loadingDiv").hide();
-            timeouts.push(
-              setTimeout(function () {
-                pollData(app_name, period);
-              }, 5 * 60 * 1000)
-            );
-          },
-          error: function (error_data) {
-            $("#loadingDiv").text("Error Refreshin Data");
-            $("#loadingDiv").css("background-color", "red");
-            console.log(error_data);
-          },
-        });
+    $(".menu-app a").click(function ()
+    {
+      $("#select-button-app").text($(this).text());
+    });
+    function pollData(app_name, period)
+    {
+      var days = period.split(" ")[1];
+      switch (days)
+      {
+        case "1":
+          days = 30;
+          break;
+        case "2":
+          days = 30 * 2;
+          break;
+        case "3":
+          days = 30 * 3;
+          break;
+        case "4":
+          days = 30 * 4;
+          break;
+        case "5":
+          days = 30 * 5;
+          break;
+        case "6":
+          days = 30 * 60;
+          break;
+        default:
+          days = 7;
       }
 
-      function colorFromValue(value, border) {
-        var alpha = (1 + Math.log(value)) / 5;
-        var color = "red";
-        if (border) {
-          alpha += 0.01;
-        }
-        return Chart.helpers.color(color).alpha(alpha).rgbString();
-      }
+      var endpoint = "/reviews?" + "q=" + app_name + "&days=" + days;
 
-      function drawPieGraph(data, id) {
-        var labels = data.labels;
-        var chartLabel = "sentiment";
-        var chartdata = data.percentage;
-        var canvas = document.getElementById(id);
-        var ctx = canvas.getContext("2d");
+      $.ajax({
+        method: "GET",
+        url: endpoint,
+        success: function (data)
+        {
+          drawPieGraph(data.overall, "myChartPie");
+          drawBarGraph(data.last7Days, "myChartBar");
+          drawTreeMap(data.common_words.all, "myCommonTreeMap", "all");
+          drawTreeMap(data.common_words.pos, "myPosTreeMap", "pos");
+          drawTreeMap(data.common_words.neg, "myNegTreeMap", "neg");
+          drawTreeMap(data.common_words.neu, "myNeuTreeMap", "neu");
 
-        if (myPieChart != undefined) {
-          myPieChart.data.labels = labels;
-          myPieChart.data.datasets[0].data = chartdata;
-          myPieChart.update();
-          return;
-        }
-
-        myPieChart = new Chart(ctx, {
-          // The type of chart we want to create
-          type: "doughnut",
-
-          // The data for our dataset
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: chartLabel,
-                data: chartdata,
-                backgroundColor: [
-                  "rgb(124,252,0)",
-                  "rgb(255, 99, 132)",
-                  "rgb(255, 205, 86)",
-                ],
-                borderColor: "rgb(55, 99, 132)",
-                hoverOffset: 4,
-              },
-            ],
-          },
-          options: {
-            title: {
-              display: true,
-              text: "Sentiment Distribution of the App",
-            },
-          },
-          plugins: [
+          $("#loadingDiv").hide();
+          timeouts.push(
+            setTimeout(function ()
             {
-              beforeInit: function (chart, options) {},
+              pollData(app_name, period);
+            }, 5 * 60 * 1000)
+          );
+        },
+        error: function (error_data)
+        {
+          $("#loadingDiv").text("Error Refreshin Data");
+          $("#loadingDiv").css("background-color", "red");
+          console.log(error_data);
+        },
+      });
+    }
+
+    const plugin = {
+      id: 'custom_canvas_background_color',
+      beforeDraw: (chart) =>
+      {
+        const { ctx } = chart;
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, chart.width, chart.height);
+        ctx.restore();
+      }
+    };
+    function colorFromValue(value, border)
+    {
+      var alpha = (1 + Math.log(value)) / 5;
+      var color = "red";
+      if (border)
+      {
+        alpha += 0.01;
+      }
+      return Chart.helpers.color(color).alpha(alpha).rgbString();
+    }
+
+    function drawPieGraph(data, id)
+    {
+      var labels = data.labels;
+      var chartLabel = "sentiment";
+      var chartdata = data.percentage;
+      var canvas = document.getElementById(id);
+      var ctx = canvas.getContext("2d");
+
+
+      if (myPieChart != undefined)
+      {
+        myPieChart.data.labels = labels;
+        myPieChart.data.datasets[0].data = chartdata;
+        myPieChart.update();
+        return;
+      }
+
+      myPieChart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: "doughnut",
+
+        // The data for our dataset
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: chartLabel,
+              data: chartdata,
+              backgroundColor: [
+                "rgb(124,252,0)",
+                "rgb(255, 99, 132)",
+                "rgb(255, 205, 86)",
+              ],
+              hoverOffset: 4,
             },
           ],
-        });
-      }
-
-      function drawTreeMap(data, id, type) {
-        var bg_color;
-        var title;
-        if (type == "all") {
-          bg_color = "purple";
-          title = "Most Used words Overall";
-          if (myTreeAll != undefined) {
-            myTreeAll.data.datasets[0].tree = data;
-            myTreeAll.update();
-            return;
-          }
-          myTreeAll = drawTreeGen(id, data, bg_color, title);
-        } else if (type == "pos") {
-          bg_color = "green";
-          title = "Most Used Words in Positive Statements";
-          if (myTreePos != undefined) {
-            myTreePos.data.datasets[0].tree = data;
-            myTreePos.update();
-            return;
-          }
-          myTreePos = drawTreeGen(id, data, bg_color, title);
-        } else if (type == "neg") {
-          bg_color = "red";
-          title = "Most Used Words in Negative Statements";
-          if (myTreeNeg != undefined) {
-            myTreeNeg.data.datasets[0].tree = data;
-            myTreeNeg.update();
-            return;
-          }
-          myTreeNeg = drawTreeGen(id, data, bg_color, title);
-        } else if (type == "neu") {
-          bg_color = "yellow";
-          title = "Most Used Words in Neutral Statements";
-          if (myTreeNeu != undefined) {
-            myTreeNeu.data.datasets[0].tree = data;
-            myTreeNeu.update();
-            return;
-          }
-          myTreeNeu = drawTreeGen(id, data, bg_color, title);
-        }
-      }
-
-      function drawTreeGen(id, data, bg_color, title) {
-        var canvas = document.getElementById(id);
-        var ctx = canvas.getContext("2d");
-        return new Chart(ctx, {
-          type: "treemap",
-          data: {
-            datasets: [
-              {
-                label: "Sample with labels",
-                tree: data,
-                key: "count",
-                groups: ["common_word"],
-                fontColor: "black",
-                fontFamily: "Optima",
-                fontSize: 10,
-                backgroundColor: bg_color,
-                borderColor: function (ctx) {
-                  return colorFromValue(ctx.dataset.data[ctx.dataIndex], true);
-                },
-                spacing: 0.1,
-                borderWidth: 2,
-                borderColor: "rgba(180,180,180, 0.15)",
-              },
-            ],
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Sentiment Distribution of the App",
           },
-          options: {
-            maintainAspectRatio: false,
-            title: {
-              display: true,
-              text: title,
-            },
-            legend: {
-              display: false,
-            },
-            tooltips: {
-              callbacks: {
-                title: function (item, data) {
-                  return data.datasets[item[0].datasetIndex].key;
-                },
-                label: function (item, data) {
-                  var dataset = data.datasets[item.datasetIndex];
-                  var dataItem = dataset.data[item.index];
-                  var obj = dataItem._data;
-                  var label = obj.common_word;
-                  return label + ": " + dataItem.v;
-                },
-              },
-            },
+        },
+        plugins: [
+          {
+            beforeInit: function (chart, options) { },
           },
-        });
-      }
+          plugin
+        ],
+      });
+    }
 
-      function drawBarGraph(data, id) {
-        var labels = data.labels;
-        var chartLabel = data.chartLabel;
-        var chartdata = data.chartdata;
-        var canvas = document.getElementById(id);
-        var ctx = canvas.getContext("2d");
-
-        if (myBarChart != undefined) {
-          myBarChart.data.labels = labels;
-          myBarChart.data.datasets[0].data = chartdata.positive;
-          myBarChart.data.datasets[1].data = chartdata.negative;
-          myBarChart.data.datasets[2].data = chartdata.neutral;
-          myBarChart.update();
+    function drawTreeMap(data, id, type)
+    {
+      var bg_color;
+      var title;
+      if (type == "all")
+      {
+        bg_color = "purple";
+        title = "Most Used words Overall";
+        if (myTreeAll != undefined)
+        {
+          myTreeAll.data.datasets[0].tree = data;
+          myTreeAll.update();
           return;
         }
+        myTreeAll = drawTreeGen(id, data, bg_color, title);
+      } else if (type == "pos")
+      {
+        bg_color = "green";
+        title = "Most Used Words in Positive Statements";
+        if (myTreePos != undefined)
+        {
+          myTreePos.data.datasets[0].tree = data;
+          myTreePos.update();
+          return;
+        }
+        myTreePos = drawTreeGen(id, data, bg_color, title);
+      } else if (type == "neg")
+      {
+        bg_color = "red";
+        title = "Most Used Words in Negative Statements";
+        if (myTreeNeg != undefined)
+        {
+          myTreeNeg.data.datasets[0].tree = data;
+          myTreeNeg.update();
+          return;
+        }
+        myTreeNeg = drawTreeGen(id, data, bg_color, title);
+      } else if (type == "neu")
+      {
+        bg_color = "yellow";
+        title = "Most Used Words in Neutral Statements";
+        if (myTreeNeu != undefined)
+        {
+          myTreeNeu.data.datasets[0].tree = data;
+          myTreeNeu.update();
+          return;
+        }
+        myTreeNeu = drawTreeGen(id, data, bg_color, title);
+      }
+    }
 
-        myBarChart = new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: labels,
-            datasets: [
+    function drawTreeGen(id, data, bg_color, title)
+    {
+      var canvas = document.getElementById(id);
+      var ctx = canvas.getContext("2d");
+      return new Chart(ctx, {
+        type: "treemap",
+        data: {
+          datasets: [
+            {
+              label: "Sample with labels",
+              tree: data,
+              key: "count",
+              groups: ["common_word"],
+              fontColor: "black",
+              fontFamily: "Optima",
+              fontSize: 13,
+              backgroundColor: bg_color,
+              borderColor: function (ctx)
               {
-                label: "Positive",
-                data: chartdata.positive,
-                backgroundColor: "rgb(124,252,0)",
+                return colorFromValue(ctx.dataset.data[ctx.dataIndex], true);
               },
+              spacing: 0.1,
+              borderWidth: 2,
+              borderColor: "rgba(180,180,180, 0.15)",
+            },
+          ],
+        },
+        options: {
+          maintainAspectRatio: false,
+          title: {
+            display: true,
+            text: title,
+          },
+          legend: {
+            display: false,
+          },
+          tooltips: {
+            callbacks: {
+              title: function (item, data)
               {
-                label: "Negative",
-                data: chartdata.negative,
-                backgroundColor: "rgb(255, 99, 132)",
+                return data.datasets[item[0].datasetIndex].key;
               },
+              label: function (item, data)
               {
-                label: "Neutral",
-                data: chartdata.neutral,
-                backgroundColor: "rgb(255, 205, 86)",
+                var dataset = data.datasets[item.datasetIndex];
+                var dataItem = dataset.data[item.index];
+                var obj = dataItem._data;
+                var label = obj.common_word;
+                return label + ": " + dataItem.v;
+              },
+            },
+          },
+        },
+        plugins:[plugin]
+      });
+    }
+
+    function drawBarGraph(data, id)
+    {
+      var labels = data.labels;
+      var chartLabel = data.chartLabel;
+      var chartdata = data.chartdata;
+      var canvas = document.getElementById(id);
+      var ctx = canvas.getContext("2d");
+
+      if (myBarChart != undefined)
+      {
+        myBarChart.data.labels = labels;
+        myBarChart.data.datasets[0].data = chartdata.positive;
+        myBarChart.data.datasets[1].data = chartdata.negative;
+        myBarChart.data.datasets[2].data = chartdata.neutral;
+        myBarChart.update();
+        return;
+      }
+
+      myBarChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Positive",
+              data: chartdata.positive,
+              backgroundColor: "rgb(124,252,0)",
+            },
+            {
+              label: "Negative",
+              data: chartdata.negative,
+              backgroundColor: "rgb(255, 99, 132)",
+            },
+            {
+              label: "Neutral",
+              data: chartdata.neutral,
+              backgroundColor: "rgb(255, 205, 86)",
+            },
+          ],
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Last 7 Days Rating Trend",
+          },
+          scales: {
+            xAxes: [
+              {
+                stacked: true,
+              },
+            ],
+            yAxes: [
+              {
+                stacked: true,
               },
             ],
           },
-          options: {
-            title: {
-              display: true,
-              text: "Last 7 Days Rating Trend",
-            },
-            scales: {
-              xAxes: [
-                {
-                  stacked: true,
-                },
-              ],
-              yAxes: [
-                {
-                  stacked: true,
-                },
-              ],
-            },
+        },
+        plugins: [
+          {
+            beforeInit: function (chart, options) { },
           },
-          plugins: [
-            {
-              beforeInit: function (chart, options) {},
-            },
-          ],
-        });
-      }
-    </script>
-  </body>
+          plugin
+        ],
+      });
+    }
+  </script>
+</body>
+
 </html>

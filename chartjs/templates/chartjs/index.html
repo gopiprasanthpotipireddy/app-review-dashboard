@@ -32,6 +32,7 @@
     <style>
       body {
         font-family: Arial;
+        background-color: #f6f8fa;
       }
 
       * {
@@ -45,6 +46,7 @@
         float: left;
         width: 80%;
         background: #f1f1f1;
+        border-radius: 0.25rem;
       }
 
       div.example button {
@@ -57,6 +59,7 @@
         border: 1px solid grey;
         border-left: none;
         cursor: pointer;
+        border-radius: 0.25rem;
       }
 
       div.example button:hover {
@@ -74,6 +77,7 @@
         display: inline-block;
         width: 60px;
         height: 34px;
+        padding-top: 5px;
       }
 
       .switch input {
@@ -128,56 +132,56 @@
       .slider.round:before {
         border-radius: 50%;
       }
+
+      #select-button-days {
+        float: left;
+        width: 80%;
+        padding: 10px;
+        background: #2196f3;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none;
+        cursor: pointer;
+        border-radius: 0.25rem;
+      }
+
+      #select-button-days:hover {
+        background: #0b7dda;
+      }
+
+      #select-button-app {
+        float: left;
+        width: 80%;
+        padding: 10px;
+        background: #2196f3;
+        color: white;
+        font-size: 17px;
+        border: 1px solid grey;
+        border-left: none;
+        cursor: pointer;
+        border-radius: 0.25rem;
+      }
+
+      #select-button-app:hover {
+        background: #0b7dda;
+      }
+      .row {
+        margin-top: 10px;
+      }
     </style>
   </head>
 
   <body class="container-fluid">
     <h1 class="text-center"><b>App Review Analysis Dashboard</b></h1>
-    <hr />
-
     <div class="row">
-      <div class="dropdown col-2 select-div">
-        <button
-          type="button"
-          class="btn btn-primary dropdown-toggle"
-          data-toggle="dropdown"
-          id="select-button-app"
-        >Brave</button>
-        <div class="dropdown-menu menu-app">
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-        </div>
-      </div>
-
-      <div
-        class="example col-4 search-div"
-        style="margin: auto; max-width: 500px"
-      >
-        <input
-          id="search-word"
-          type="text"
-          placeholder="Google App ID.. ex: com.brave.browser_beta"
-        />
-        <button id="search-button" type="submit">
-          <i class="fa fa-search"></i>
-        </button>
-      </div>
-      <div class="col-sm-2">
-        <label>Search</label>
-        <label class="switch">
-          <input type="checkbox" id="search-toggle" />
-          <span class="slider round"></span>
-        </label>
-      </div>
       <div class="dropdown col-2">
         <button
           type="button"
           class="btn btn-primary dropdown-toggle"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
           data-toggle="dropdown"
           id="select-button-days"
         >
@@ -192,6 +196,46 @@
           <a class="dropdown-item" href="#">Last 5 Months</a>
           <a class="dropdown-item" href="#">Last 6 Months</a>
         </div>
+      </div>
+
+      <div
+        class="example col-4 search-div"
+        style="margin: auto; max-width: 500px"
+      >
+        <div class="dropdown select-div">
+          <button
+            type="button"
+            class="btn btn-primary dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            data-toggle="dropdown"
+            id="select-button-app"
+          >Brave</button>
+          <div class="dropdown-menu dropdown-menu-end menu-app">
+            <a class="dropdown-item" href="#">Brave</a>
+            <a class="dropdown-item" href="#">Upstox</a>
+            <a class="dropdown-item" href="#">Amazon</a>
+            <a class="dropdown-item" href="#">Ebay</a>
+            <a class="dropdown-item" href="#">IKEA</a>
+          </div>
+        </div>
+        <input
+          id="search-word"
+          type="text"
+          placeholder="Google App ID.. ex: com.brave.browser_beta"
+        />
+        <button id="search-button" type="submit">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+      <div class="col-sm-2">
+        <label style="padding: 10px">Select</label>
+        <label class="switch">
+          <input type="checkbox" id="search-toggle" />
+          <span class="slider round" data-on="ON" data-off="OFF"></span>
+        </label>
+        <label style="padding: 10px">Search</label>
       </div>
 
       <div class="col-4">
@@ -248,7 +292,13 @@
       var searchToggle;
       var app_name;
       var period;
-      var app_ids={"Brave":"com.brave.browser_beta","Upstox":"in.upstox.pro"};
+      var app_ids = {
+        Brave: "com.brave.browser_beta",
+        Upstox: "in.upstox.pro",
+        Amazon: "com.amazon.mShop.android.shopping",
+        Ebay: "com.ebay.mobile",
+        IKEA:"com.ingka.ikea.app"
+      };
       function clearAllTimeout() {
         for (var i = 0, z = timeouts.length; i < z; i++)
           clearTimeout(timeouts[i]);
@@ -275,20 +325,17 @@
       $("#search-button").click(function () {
         clearAllTimeout();
         if (searchToggle) {
-        app_name = $("#search-word").val();
+          app_name = $("#search-word").val();
         } else {
           app_name = $("#select-button-app").text();
-          console.log(app_name)
-          console.log(app_ids)
-          app_name=app_ids[app_name];
-
+          app_id = app_ids[app_name];
         }
         period = $("#select-button-days").text();
         $("#loadingDiv").show();
         $("#loadingDiv").text(
           "Setting Up View For " + app_name + " it takes few min..."
         );
-        pollData(app_name, period);
+        pollData(app_id, period);
       });
 
       //Select Period
@@ -354,6 +401,17 @@
         });
       }
 
+      const plugin = {
+        id: "custom_canvas_background_color",
+        beforeDraw: (chart) => {
+          const { ctx } = chart;
+          ctx.save();
+          ctx.globalCompositeOperation = "destination-over";
+          ctx.fillStyle = "white";
+          ctx.fillRect(0, 0, chart.width, chart.height);
+          ctx.restore();
+        },
+      };
       function colorFromValue(value, border) {
         var alpha = (1 + Math.log(value)) / 5;
         var color = "red";
@@ -393,7 +451,6 @@
                   "rgb(255, 99, 132)",
                   "rgb(255, 205, 86)",
                 ],
-                borderColor: "rgb(55, 99, 132)",
                 hoverOffset: 4,
               },
             ],
@@ -408,6 +465,7 @@
             {
               beforeInit: function (chart, options) {},
             },
+            plugin,
           ],
         });
       }
@@ -468,7 +526,7 @@
                 groups: ["common_word"],
                 fontColor: "black",
                 fontFamily: "Optima",
-                fontSize: 10,
+                fontSize: 13,
                 backgroundColor: bg_color,
                 borderColor: function (ctx) {
                   return colorFromValue(ctx.dataset.data[ctx.dataIndex], true);
@@ -503,6 +561,7 @@
               },
             },
           },
+          plugins: [plugin],
         });
       }
 
@@ -566,6 +625,7 @@
             {
               beforeInit: function (chart, options) {},
             },
+            plugin,
           ],
         });
       }

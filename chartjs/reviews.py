@@ -23,6 +23,7 @@ from collections import Counter
 
 nltk.download('stopwords')
 nltk.download('punkt')
+nltk.download('wordnet')
 
 
 class Review:

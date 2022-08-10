@@ -19,6 +19,7 @@ from nltk.stem import LancasterStemmer, WordNetLemmatizer
 from collections import Counter
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import datetime as DT
+from dateutil.relativedelta import relativedelta
 from collections import Counter
 
 nltk.download('stopwords')
@@ -101,8 +102,13 @@ class Review:
     def year(self, time):
         return str(time).split("-")[0]
 
+    def year_and_month(self, time):
+        date = str(time).split(" ")[0]
+        dateArray = str(date).split("-")
+        return dateArray[0]+"-"+dateArray[1]
     def month(self, time):
-        return str(time).split("-")[1]
+        dateArray = str(time).split("-")
+        return dateArray[1]
 
     def date(self, time):
         return str(time).split(" ")[0]
@@ -123,7 +129,7 @@ class Review:
         response=self.get_sentiment_from_data(data)
         return response
 
-    def get_sentiment_from_data(self, data):
+    def get_sentiment_from_data(self, data, days):
         data["content"] = data["content"].apply(
             lambda x: self.clean_text(str(x)))
         data["content"] = data["content"].apply(
@@ -161,38 +167,11 @@ class Review:
         total = len(data.index)
 
         # Filter last 7 days reviews
-        today = DT.datetime.utcnow().date()
-        dt = DT.datetime.combine(today, DT.datetime.min.time())
-        week_ago = dt - DT.timedelta(days=7)
-
-        reviews_last7days = data.loc[data['at'] > week_ago]
-        reviews_last7days['date'] = reviews_last7days['at'].apply(
-            lambda x: self.date(x))
-        last7Days = reviews_last7days.groupby(['sentiment', 'date'])
-        positive = []
-        negative = []
-        neutral = []
-        keys = last7Days.groups.keys()
-
-        dates_list = []
-        for i in range(6, -1, -1):
-            dates_list.append(str(today - DT.timedelta(days=i)))
-
-        for sub_ind in dates_list:
-            if ('Positive', sub_ind) in keys:
-                positive.append(last7Days.get_group(
-                    ('Positive', sub_ind)).size)
-            else:
-                positive.append(0)
-            if ('Negative', sub_ind) in keys:
-                negative.append(last7Days.get_group(
-                    ('Negative', sub_ind)).size)
-            else:
-                negative.append(0)
-            if ('Neutral', sub_ind) in keys:
-                neutral.append(last7Days.get_group(('Neutral', sub_ind)).size)
-            else:
-                neutral.append(0)
+        data_last_7days = self.get_last_7_days(data)
+         # Filter last 7 months reviews
+        data_last_7months=None
+        if(days>30):
+            data_last_7months = self.get_last_n_Months(data, days)
 
         # Top 20 Common words
         data['temp_list'] = data["reviews"].apply(lambda x: str(x).split())
@@ -235,15 +214,8 @@ class Review:
                                (counts.get_group('Neutral').count()/total)*100
                                ]
             },
-            'last7Days': {
-                'labels': dates_list,
-                'chartdata': {
-                    'positive': positive,
-                    'negative': negative,
-                    'neutral': neutral,
-                }
-
-            },
+            'last7Days': data_last_7days,
+            'last7Months': data_last_7months,
             'common_words': {
                 "all": result_all["data"],
                 "pos": result_pos["data"],
@@ -256,6 +228,93 @@ class Review:
     def get_start_date_time(self, input_date):
         return DT.datetime.combine(input_date, DT.datetime.min.time())
 
+    def get_last_n_Months(self,data,days):
+        data['month'] = data['at'].apply(lambda x: self.year_and_month(x))
+        today = DT.datetime.utcnow().date()
+        dt = DT.datetime.combine(today, DT.datetime.min.time())
+        past_date=dt - DT.timedelta(days=days)
+        months_list=[]
+
+        while(True):
+            if(self.year(past_date)>self.year(today)):
+                break
+            if(self.year(past_date)==self.year(today) and self.month(past_date)>self.month(today)):
+                break
+            months_list.append(self.year_and_month(past_date))
+            past_date = past_date+relativedelta(months=1)
+        
+        last7 = data.groupby(['sentiment', 'month'])
+        positive = []
+        negative = []
+        neutral = []
+        keys = last7.groups.keys()
+
+        for sub_ind in months_list:
+            if ('Positive', sub_ind) in keys:
+                positive.append(last7.get_group(
+                    ('Positive', sub_ind)).size)
+            else:
+                positive.append(0)
+            if ('Negative', sub_ind) in keys:
+                negative.append(last7.get_group(
+                    ('Negative', sub_ind)).size)
+            else:
+                negative.append(0)
+            if ('Neutral', sub_ind) in keys:
+                neutral.append(last7.get_group(('Neutral', sub_ind)).size)
+            else:
+                neutral.append(0)
+        return  {
+                'labels': months_list,
+                'chartdata': {
+                    'positive': positive,
+                    'negative': negative,
+                    'neutral': neutral,
+                }
+            }
+
+
+    def get_last_7_days(self,data):
+        today = DT.datetime.utcnow().date()
+        dt = DT.datetime.combine(today, DT.datetime.min.time())
+        dates_list = []
+        past_time = dt - DT.timedelta(days=7)
+        for i in range(6, -1, -1):
+            dates_list.append(str(today - DT.timedelta(days=i)))
+
+        reviews_last7 = data.loc[data['at'] > past_time]
+        reviews_last7['date'] = reviews_last7['at'].apply(
+            lambda x: self.date(x))
+        last7 = reviews_last7.groupby(['sentiment', 'date'])
+        positive = []
+        negative = []
+        neutral = []
+        keys = last7.groups.keys()
+
+        for sub_ind in dates_list:
+            if ('Positive', sub_ind) in keys:
+                positive.append(last7.get_group(
+                    ('Positive', sub_ind)).size)
+            else:
+                positive.append(0)
+            if ('Negative', sub_ind) in keys:
+                negative.append(last7.get_group(
+                    ('Negative', sub_ind)).size)
+            else:
+                negative.append(0)
+            if ('Neutral', sub_ind) in keys:
+                neutral.append(last7.get_group(('Neutral', sub_ind)).size)
+            else:
+                neutral.append(0)
+        return  {
+                'labels': dates_list,
+                'chartdata': {
+                    'positive': positive,
+                    'negative': negative,
+                    'neutral': neutral,
+                }
+            }
+
     def get_reviews_from_date(self, request):
 
         app_name = request.GET.get('q')
@@ -265,7 +324,6 @@ class Review:
         today = DT.datetime.utcnow().date()
         dt = DT.datetime.combine(today, DT.datetime.min.time())
         from_date = dt - DT.timedelta(days=int(days))
-
         continuation_token = None
         complete_data = list()
         while(True):
@@ -293,5 +351,5 @@ class Review:
 
         data = pd.DataFrame(np.array(complete_data), columns=['review'])
         data = data.join(pd.DataFrame(data.pop('review').tolist()))
-        response=self.get_sentiment_from_data(data)
+        response=self.get_sentiment_from_data(data, int(days))
         return response

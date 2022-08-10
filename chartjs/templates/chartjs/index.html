@@ -237,12 +237,12 @@
       </button>
       <div class="dropdown-menu menu-days">
         <a class="dropdown-item" href="#">Last 7 Days</a>
-        <a class="dropdown-item" href="#">Last 1 Month</a>
-        <a class="dropdown-item" href="#">Last 2 Months</a>
-        <a class="dropdown-item" href="#">Last 3 Months</a>
-        <a class="dropdown-item" href="#">Last 4 Months</a>
-        <a class="dropdown-item" href="#">Last 5 Months</a>
-        <a class="dropdown-item" href="#">Last 6 Months</a>
+        <a class="dropdown-item" href="#">Last 30 Days</a>
+        <a class="dropdown-item" href="#">Last 60 Days</a>
+        <a class="dropdown-item" href="#">Last 90 Days</a>
+        <a class="dropdown-item" href="#">Last 120 Days</a>
+        <a class="dropdown-item" href="#">Last 150 Days</a>
+        <a class="dropdown-item" href="#">Last 180 Days</a>
       </div>
     </div>
 
@@ -252,12 +252,10 @@
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false" data-toggle="dropdown" id="select-button-app">Brave</button>
         <div class="dropdown-menu dropdown-menu-end menu-app">
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
-          <a class="dropdown-item" href="#">Upstox</a>
+          <a class="dropdown-item" href="#">Brave</a>
+          <a class="dropdown-item" href="#">IKEA</a>
+          <a class="dropdown-item" href="#">Ebay</a>
+          <a class="dropdown-item" href="#">Amazon</a>
           <a class="dropdown-item" href="#">Upstox</a>
         </div>
       </div>
@@ -285,11 +283,14 @@
   </div>
 
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <canvas id="myChartPie"></canvas>
     </div>
-    <div class="col-md-6">
-      <canvas id="myChartBar"> </canvas>
+    <div class="col-md-4">
+      <canvas id="myDayChartBar"> </canvas>
+    </div>
+    <div class="col-md-4">
+      <canvas id="myMonthChartBar"> </canvas>
     </div>
   </div>
   <br />
@@ -315,7 +316,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@0.2.3"></script>
 
   <script>
-    var myBarChart;
+    var myDayBarChart;
+    var myMonthBarChart;
     var myPieChart;
     var myTreeAll;
     var myTreePos;
@@ -326,7 +328,10 @@
     var searchToggle;
     var app_name;
     var period;
-    var app_ids = { "Brave": "com.brave.browser_beta", "Upstox": "in.upstox.pro" };
+    var app_ids = { "Brave": "com.brave.browser_beta", "Upstox": "in.upstox.pro" ,
+    "IKEA":"com.ingka.ikea.app",
+    "Amazon":"com.amazon.mShop.android.shopping",
+    "Ebay":"com.ebay.mobile"};
     function clearAllTimeout()
     {
       for (var i = 0, z = timeouts.length; i < z; i++)
@@ -388,33 +393,12 @@
     {
       $("#select-button-app").text($(this).text());
     });
+
+    $("#myMonthChartBar").hide();
+
     function pollData(app_name, period)
     {
       var days = period.split(" ")[1];
-      switch (days)
-      {
-        case "1":
-          days = 30;
-          break;
-        case "2":
-          days = 30 * 2;
-          break;
-        case "3":
-          days = 30 * 3;
-          break;
-        case "4":
-          days = 30 * 4;
-          break;
-        case "5":
-          days = 30 * 5;
-          break;
-        case "6":
-          days = 30 * 60;
-          break;
-        default:
-          days = 7;
-      }
-
       var endpoint = "/reviews?" + "q=" + app_name + "&days=" + days;
 
       $.ajax({
@@ -423,7 +407,13 @@
         success: function (data)
         {
           drawPieGraph(data.overall, "myChartPie");
-          drawBarGraph(data.last7Days, "myChartBar");
+          drawBarGraph(data.last7Days, "myDayChartBar","day");
+          if(data.last7Months!=null){
+            $("#myMonthChartBar").show();
+            drawBarGraph(data.last7Months, "myMonthChartBar","month");
+          } else{
+            $("#myMonthChartBar").hide();
+          }
           drawTreeMap(data.common_words.all, "myCommonTreeMap", "all");
           drawTreeMap(data.common_words.pos, "myPosTreeMap", "pos");
           drawTreeMap(data.common_words.neg, "myNegTreeMap", "neg");
@@ -629,42 +619,67 @@
       });
     }
 
-    function drawBarGraph(data, id)
+    
+    function drawBarGraph(data, id, type)
     {
-      var labels = data.labels;
+     var labels = data.labels;
       var chartLabel = data.chartLabel;
       var chartdata = data.chartdata;
-      var canvas = document.getElementById(id);
-      var ctx = canvas.getContext("2d");
-
-      if (myBarChart != undefined)
+      var title="";
+      if (type == "day")
       {
-        myBarChart.data.labels = labels;
-        myBarChart.data.datasets[0].data = chartdata.positive;
-        myBarChart.data.datasets[1].data = chartdata.negative;
-        myBarChart.data.datasets[2].data = chartdata.neutral;
-        myBarChart.update();
-        return;
+        if (myDayBarChart != undefined)
+        {
+          myDayBarChart.data.labels = labels;
+          myDayBarChart.data.datasets[0].data = chartdata.positive;
+          myDayBarChart.data.datasets[1].data = chartdata.negative;
+          myDayBarChart.data.datasets[2].data = chartdata.neutral;
+          myDayBarChart.update();
+          return;
+        }
+          title="Last 7 Days Rating Trend"
+          myDayBarChart = drawBarCompleteGraph(data, id, title)
+      }
+      else if (type == "month")
+      {
+        if (myMonthBarChart != undefined)
+        {
+          myMonthBarChart.data.labels = labels;
+          myMonthBarChart.data.datasets[0].data = chartdata.positive;
+          myMonthBarChart.data.datasets[1].data = chartdata.negative;
+          myMonthBarChart.data.datasets[2].data = chartdata.neutral;
+          myMonthBarChart.update();
+          return;
+        }
+          title="Monthly Rating Trend"
+          myMonthBarChart = drawBarCompleteGraph(data, id, title)
       }
 
-      myBarChart = new Chart(ctx, {
+
+    }
+
+    function drawBarCompleteGraph(data, id, title)
+    {
+      var canvas = document.getElementById(id);
+      var ctx = canvas.getContext("2d");
+      return new Chart(ctx, {
         type: "bar",
         data: {
-          labels: labels,
+          labels: data.labels,
           datasets: [
             {
               label: "Positive",
-              data: chartdata.positive,
+              data: data.chartdata.positive,
               backgroundColor: "rgb(124,252,0)",
             },
             {
               label: "Negative",
-              data: chartdata.negative,
+              data: data.chartdata.negative,
               backgroundColor: "rgb(255, 99, 132)",
             },
             {
               label: "Neutral",
-              data: chartdata.neutral,
+              data: data.chartdata.neutral,
               backgroundColor: "rgb(255, 205, 86)",
             },
           ],
@@ -672,7 +687,7 @@
         options: {
           title: {
             display: true,
-            text: "Last 7 Days Rating Trend",
+            text: title,
           },
           scales: {
             xAxes: [

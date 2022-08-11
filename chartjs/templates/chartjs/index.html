@@ -237,12 +237,12 @@
       </button>
       <div class="dropdown-menu menu-days">
         <a class="dropdown-item" href="#">Last 7 Days</a>
-        <a class="dropdown-item" href="#">Last 30 Days</a>
-        <a class="dropdown-item" href="#">Last 60 Days</a>
-        <a class="dropdown-item" href="#">Last 90 Days</a>
-        <a class="dropdown-item" href="#">Last 120 Days</a>
-        <a class="dropdown-item" href="#">Last 150 Days</a>
-        <a class="dropdown-item" href="#">Last 180 Days</a>
+        <a class="dropdown-item" href="#">Last 1 Month</a>
+        <a class="dropdown-item" href="#">Last 2 Months</a>
+        <a class="dropdown-item" href="#">Last 3 Months</a>
+        <a class="dropdown-item" href="#">Last 4 Months</a>
+        <a class="dropdown-item" href="#">Last 5 Months</a>
+        <a class="dropdown-item" href="#">Last 6 Months</a>
       </div>
     </div>
 
@@ -398,8 +398,14 @@
 
     function pollData(app_name, period)
     {
-      var days = period.split(" ")[1];
-      var endpoint = "/reviews?" + "q=" + app_name + "&days=" + days;
+      var time = period.split(" ")[1];
+      var endpoint = "/reviews?" + "q=" + app_name
+      if(time<7)
+        endpoint=endpoint+ "&months=" + time;
+      else
+        endpoint=endpoint+ "&days=" + time;
+
+       
 
       $.ajax({
         method: "GET",

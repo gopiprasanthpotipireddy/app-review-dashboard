@@ -1,3 +1,4 @@
+from calendar import month
 from itertools import count
 import json
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -129,7 +130,7 @@ class Review:
         response=self.get_sentiment_from_data(data)
         return response
 
-    def get_sentiment_from_data(self, data, days):
+    def get_sentiment_from_data(self, data, months,from_date):
         data["content"] = data["content"].apply(
             lambda x: self.clean_text(str(x)))
         data["content"] = data["content"].apply(
@@ -170,8 +171,8 @@ class Review:
         data_last_7days = self.get_last_7_days(data)
          # Filter last 7 months reviews
         data_last_7months=None
-        if(days>30):
-            data_last_7months = self.get_last_n_Months(data, days)
+        if(months>0):
+            data_last_7months = self.get_last_n_months(data, from_date)
 
         # Top 20 Common words
         data['temp_list'] = data["reviews"].apply(lambda x: str(x).split())
@@ -228,40 +229,38 @@ class Review:
     def get_start_date_time(self, input_date):
         return DT.datetime.combine(input_date, DT.datetime.min.time())
 
-    def get_last_n_Months(self,data,days):
+    def get_last_n_months(self,data,from_date):
         data['month'] = data['at'].apply(lambda x: self.year_and_month(x))
         today = DT.datetime.utcnow().date()
-        dt = DT.datetime.combine(today, DT.datetime.min.time())
-        past_date=dt - DT.timedelta(days=days)
         months_list=[]
 
         while(True):
-            if(self.year(past_date)>self.year(today)):
+            if(self.year(from_date)>self.year(today)):
                 break
-            if(self.year(past_date)==self.year(today) and self.month(past_date)>self.month(today)):
+            if(self.year(from_date)==self.year(today) and self.month(from_date)>self.month(today)):
                 break
-            months_list.append(self.year_and_month(past_date))
-            past_date = past_date+relativedelta(months=1)
+            months_list.append(self.year_and_month(from_date))
+            from_date = from_date+relativedelta(months=1)
         
-        last7 = data.groupby(['sentiment', 'month'])
+        last_n_months = data.groupby(['sentiment', 'month'])
         positive = []
         negative = []
         neutral = []
-        keys = last7.groups.keys()
+        keys = last_n_months.groups.keys()
 
         for sub_ind in months_list:
             if ('Positive', sub_ind) in keys:
-                positive.append(last7.get_group(
+                positive.append(last_n_months.get_group(
                     ('Positive', sub_ind)).size)
             else:
                 positive.append(0)
             if ('Negative', sub_ind) in keys:
-                negative.append(last7.get_group(
+                negative.append(last_n_months.get_group(
                     ('Negative', sub_ind)).size)
             else:
                 negative.append(0)
             if ('Neutral', sub_ind) in keys:
-                neutral.append(last7.get_group(('Neutral', sub_ind)).size)
+                neutral.append(last_n_months.get_group(('Neutral', sub_ind)).size)
             else:
                 neutral.append(0)
         return  {
@@ -319,11 +318,18 @@ class Review:
 
         app_name = request.GET.get('q')
         days=request.GET.get('days')
-
+        months=request.GET.get('months')
 
         today = DT.datetime.utcnow().date()
         dt = DT.datetime.combine(today, DT.datetime.min.time())
-        from_date = dt - DT.timedelta(days=int(days))
+
+        if(days):
+            from_date = dt - DT.timedelta(days=int(days))
+            months=0
+        if(months):
+            from_date=DT.datetime(int(self.year(dt)),int(self.month(dt)),1)
+            from_date=from_date-relativedelta(months=int(months))
+
         continuation_token = None
         complete_data = list()
         while(True):
@@ -351,5 +357,5 @@ class Review:
 
         data = pd.DataFrame(np.array(complete_data), columns=['review'])
         data = data.join(pd.DataFrame(data.pop('review').tolist()))
-        response=self.get_sentiment_from_data(data, int(days))
+        response=self.get_sentiment_from_data(data, int(months),from_date)
         return response

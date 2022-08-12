@@ -283,13 +283,13 @@
   </div>
 
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4" id="pie-all">
       <canvas id="myChartPie"></canvas>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4" id="bar-days">
       <canvas id="myDayChartBar"> </canvas>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4" id="bar-months">
       <canvas id="myMonthChartBar"> </canvas>
     </div>
   </div>
@@ -374,6 +374,8 @@
 
       }
       period = $("#select-button-days").text();
+      
+
       $("#loadingDiv").show();
       $("#loadingDiv").text(
         "Setting Up View For " + app_name + " it takes few min..."
@@ -400,10 +402,20 @@
     {
       var time = period.split(" ")[1];
       var endpoint = "/reviews?" + "q=" + app_name
-      if(time<7)
+      if(time<7){
         endpoint=endpoint+ "&months=" + time;
-      else
+        $("#pie-all").removeClass("col-md-6")
+        $("#bar-days").removeClass("col-md-6")
+        $("#pie-all").addClass("col-md-4")
+        $("#bar-days").addClass("col-md-4")
+      }
+      else{
         endpoint=endpoint+ "&days=" + time;
+        $("#pie-all").removeClass("col-md-4")
+        $("#bar-days").removeClass("col-md-4")
+        $("#pie-all").addClass("col-md-6")
+        $("#bar-days").addClass("col-md-6")
+      }
 
        
 

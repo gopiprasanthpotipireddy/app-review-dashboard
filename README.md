@@ -16,11 +16,11 @@ Prerequisites:
   Any Browser 
   
 How to Run:
-  git clone https://github.com/gopiprasanthpotipireddy/app-review-dashboard.git
-  cd app-review-dashboard
-  pip install -r requirements.txt
-  python manage.py runserer
-  go to browser open http://localhost:8000
+ - git clone https://github.com/gopiprasanthpotipireddy/app-review-dashboard.git
+ - cd app-review-dashboard
+ - pip install -r requirements.txt
+ - python manage.py runserer
+ - go to browser open http://localhost:8000
 
 
 Web UI:

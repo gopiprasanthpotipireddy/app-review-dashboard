@@ -5,15 +5,15 @@ Review Analysis Dashoboard:
   
   
 Technology used:
-  Chart.js for graphs [ https://www.chartjs.org ] 
-  Vader sentiment Analysis for Review Analysis [ https://github.com/cjhutto/vaderSentiment ]
-  Python Django for backend
-  Html,Jquery,Ajax FOR UI
-  google-play-scrapper api for app data
+ - Chart.js for graphs [ https://www.chartjs.org ] 
+ - Vader sentiment Analysis for Review Analysis [ https://github.com/cjhutto/vaderSentiment ]
+ - Python Django for backend
+ - Html,Jquery,Ajax FOR UI
+ - google-play-scrapper api for app data
   
 Prerequisites:
-  Python 3.7
-  Any Browser 
+ - Python 3.7
+ - Any Browser 
   
 How to Run:
  - git clone https://github.com/gopiprasanthpotipireddy/app-review-dashboard.git

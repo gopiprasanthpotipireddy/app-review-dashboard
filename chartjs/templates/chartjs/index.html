@@ -328,7 +328,7 @@
     var searchToggle;
     var app_name;
     var period;
-    var app_ids = { "Brave": "com.brave.browser_beta", "Upstox": "in.upstox.pro" ,
+    var app_ids = { "Brave": "com.brave.browser", "Upstox": "in.upstox.pro" ,
     "IKEA":"com.ingka.ikea.app",
     "Amazon":"com.amazon.mShop.android.shopping",
     "Ebay":"com.ebay.mobile"};
@@ -681,24 +681,27 @@
       var canvas = document.getElementById(id);
       var ctx = canvas.getContext("2d");
       return new Chart(ctx, {
-        type: "bar",
+        type: "line",
         data: {
           labels: data.labels,
           datasets: [
             {
               label: "Positive",
+              fill:false,
               data: data.chartdata.positive,
-              backgroundColor: "rgb(124,252,0)",
+              borderColor: "rgb(124,252,0)",
             },
             {
               label: "Negative",
+              fill:false,
               data: data.chartdata.negative,
-              backgroundColor: "rgb(255, 99, 132)",
+              borderColor: "rgb(255, 99, 132)",
             },
             {
               label: "Neutral",
+              fill:false,
               data: data.chartdata.neutral,
-              backgroundColor: "rgb(255, 205, 86)",
+              borderColor: "rgb(255, 205, 86)",
             },
           ],
         },
@@ -708,16 +711,7 @@
             text: title,
           },
           scales: {
-            xAxes: [
-              {
-                stacked: true,
-              },
-            ],
-            yAxes: [
-              {
-                stacked: true,
-              },
-            ],
+            
           },
         },
         plugins: [

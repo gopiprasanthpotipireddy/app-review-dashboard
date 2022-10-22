@@ -1,6 +1,6 @@
 
 Review Analysis Dashoboard:
-  This is a web dashboard shows analysis of any android app in google playstore. Tha analysis runs on comments of the app in playstore and gives a overview to the stakeholders on the user experience of the app. 
+  This is a web dashboard shows analysis of any android app in google playstore. The analysis runs on comments of the app in playstore and gives an overview to the stakeholders on the user experience of the app. 
   
   
   
